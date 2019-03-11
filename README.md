@@ -8,15 +8,13 @@ V5-TEMPLATE.vex has examples of most of the VEX V5 commands needed to program a 
 V5-ECHO-ENCODER.vex is a handly utility which displays encoder values to the controller.  When stepping through the autonomous pseudo-code the encoder valuse can be recorded & then zeroed.  When done these values can be passes to the motor functions to create an autonomous routine.
 
 ============  TEMPLATE ==============
-        VEX C++ TEMPLATE FOR METHODIZING MOVEMENTS
- 
 The file is for nine-motor clawbot except the claw (called grabber) is a pulley which tilts the claw:
 	4 - drive wheels
 	2 - arm
 	1 - grabber (claw)
 	2 - ball 'puncher'  
-       
-        FUNCTIONS PREFIX
+
+	FUNCTIONS PREFIX
             'a' denotes ABSOLUTE movement from zero (home) position = aName(double, int, bool)
             'r' denotes movement RELATIVE to it's current position = rName(double, int, bool)
             't' denotes task = tName(bool)
@@ -27,12 +25,6 @@ The file is for nine-motor clawbot except the claw (called grabber) is a pulley 
             WAIT IS A 'FLAG' (TRUE/FALSE, 1/0) TO "WAIT UNTIL COMPLETION"(1) OR NOT (0)
                 1 = BLOCKING, 0 = NON-BLOCKING
             
-        COMMON MOTOR.settings
-            .setStopping()
-            .resetRotation()
-            .spin()
-            .rotateTo() 
-            .rotateFor()   
        CONTROLS
             L1 - LOWER CLAW     L2 - RAISE CLAW
                     UP - LOAD BALL
@@ -63,8 +55,7 @@ Plugging these falues in to the functions creates the autonomous routine:
 
 * Many times the RED and BLUE autonomous are mirrored. Once the autonomous is good simply reversing the turns should work for the other color.
 
-
-SMART MOTORS
+ =========  SMART MOTORS
 'Smart Motors' are the heart of V5.  A smart motor simply means the motors have electronics built-in to allow some really powerful functionality - mostly notably an integrated 'encoder'. An encoder simply counts the motors' rotations - often referred to 'ticks'.  So if an encoder has 60 counts per revolution then 180 'ticks' would be 1/2 a revolution, 720 = 2 rev etc.  By controlling a motor's rotations allows fairly very accurate & powerful programming.  
 
 Another advantage of the smart motors is the ability to 'lock' the motor's position to the encoder's value.  This is great for holding an arm in the air, for instance.
@@ -73,7 +64,14 @@ The motors also have a braking setting - coast, brake or hold.  Coast allows the
 
 Smart motors have three basic modes of operation: spin, rotateTo and rotateForw. It is crucial to understand that rotateTo and rotateFor are BLOCKING commands!! This means than unless explicity told otherwise, NOTHING will happen until the command is completed.  This can be really good or really, really bad in that is something prevents a blocking command from completing the robot will stop dead!!!!!!
 
-MORE @ PROGRAMMING
+COMMON MOTOR.settings
+            .setStopping()
+            .resetRotation()
+            .spin()
+            .rotateTo() 
+            .rotateFor()   
+
+========== MORE @ PROGRAMMING
 VEX V5 C++ is an object-oriented language for programming robots.  'Objects' are beyond the scope of this document but basically means something can be created and 'inheret' certain values from it's parent.  For instance ArmMotor(), LeftDriveMotor() all are 'children' of the Motor() object. As such they inheret all of Motor()'s properties which can be changed such as velocity, velocity units, rotation, rotation units, braking mode etc..
 
 The object properties often accept values (parameters).  A typical example:
