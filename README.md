@@ -1,5 +1,20 @@
-# VEX-V5-TEMPLATES
+# VEX-V5-TEMPLATES		2019-09-23
 
+---
+Templates for competition-ready VEX Robotics Clawbot
+
+
+ * V5-Clawbot-Template - Template file for standard Clawbot
+	features: 	parameterized motions for simpler autonomous (absolute and relative, blocking or not)
+			fine-tune autonomous for different fields
+ * V5-Encoder-Template (pending) - read & reset motor encoders to help build/troubleshoot autonomous			
+
+
+NOTE: Programs are written in VEXcode V5 Text - https://www.vexrobotics.com/vexcode-download
+
+'''
+###
+=========    	outdated content follows	(VEX Coding Studio) 		============
 	V5-TEMPLATE.vex
 	V5-ECHO-ENCODER.vex
 
