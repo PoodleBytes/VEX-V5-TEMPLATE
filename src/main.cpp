@@ -14,10 +14,12 @@ void setUpMotor(motor(M));
 
 //VARIABLES
 double adjSpeed = 1.0;   //adjust drive sensitivity
-double adjLift = 0.5;    //adjust arm's sensitivity
-int deadBand = 30;      //range below which joystick is ignored
+double adjLift = 1.0;    //adjust arm's sensitivity
+int deadBand = 10;      //range below which joystick is ignored
 double adjField = 1.0;  //adjust automouse drive() degrees match conditions
 bool clawClosed = 0;
+
+int fwdDir = 1;
 
 //MOVEMENT / CONTROL
 int tLift();                                  //arm-relatecd tasks / buttons
@@ -44,20 +46,23 @@ void usercontrol( void ) {
         L_Rear_Drive.spin(directionType::fwd, (Controller1.Axis1.value() + Controller1.Axis2.value())*adjSpeed, velocityUnits::pct);
         R_Rear_Drive.spin(directionType::fwd, (Controller1.Axis1.value() - Controller1.Axis2.value())*adjSpeed, velocityUnits::pct);
         L_Front_Drive.spin(directionType::fwd, (Controller1.Axis1.value() + Controller1.Axis2.value())*adjSpeed, velocityUnits::pct);
-        R_Rear_Drive.spin(directionType::fwd, (Controller1.Axis1.value() - Controller1.Axis2.value())*adjSpeed, velocityUnits::pct);
+        R_Front_Drive.spin(directionType::fwd, (Controller1.Axis1.value() - Controller1.Axis2.value())*adjSpeed, velocityUnits::pct);
         vex::task::sleep(100); //Sleep the task for a short amount of time to prevent wasted resources. 
+        
     }//end while
 }
 
 
 void toggleClaw(void){ //
   if(clawClosed){ //OPEN CLAW
-        Claw.rotateTo(270, vex::rotationUnits::deg,50, vex::velocityUnits::pct, false);
+        Claw.rotateFor(360, vex::rotationUnits::deg,50, vex::velocityUnits::pct, false);
         clawClosed = 0;
+        vex::task::sleep(200);
   }
   else {
-        Claw.rotateTo(-270, vex::rotationUnits::deg,50, vex::velocityUnits::pct, false);
+        Claw.rotateFor(-360, vex::rotationUnits::deg,50, vex::velocityUnits::pct, false);
         clawClosed = 1;
+        vex::task::sleep(200);
   }
 }//end vClaw
 
@@ -67,9 +72,9 @@ int tLift(void){ //ARM & CLAW TASK
         L_Lift.spin(vex::directionType::fwd, Controller1.Axis3.value()*adjLift, vex::velocityUnits::rpm);
         R_Lift.spin(vex::directionType::fwd, Controller1.Axis3.value()*adjLift, vex::velocityUnits::rpm);
       }else if(Controller1.ButtonL1.pressing()){    
-          toggleClaw(); 
+          Claw.spin(vex::directionType::fwd, 50, vex::velocityUnits::pct);
       }else if(Controller1.ButtonL2.pressing()){
-          // do something like rDrive(50,20,1); 
+          Claw.spin(vex::directionType::rev, 50, vex::velocityUnits::pct);
       }else if(Controller1.ButtonUp.pressing()){
           // do something like rDrive(50,20,1); 
       }else if(Controller1.ButtonR1.pressing()){
@@ -77,13 +82,16 @@ int tLift(void){ //ARM & CLAW TASK
       }else{
           L_Lift.stop(brakeType::hold);
           R_Lift.stop(brakeType::hold);
+          Claw.stop(brakeType::hold);
       }
       vex::task::sleep(20);
     }   
     return 0;
 }//end tArm
 
-void rDrive(double lDeg, double rDeg, int l, int r, bool b){  //!!!may have to have seperate degrees for left & right
+void rDrive(double lDeg, double rDeg, int l, int r, bool b){  // drive by relative distance
+    lDeg = lDeg * adjField; //adjust distance based on field
+    rDeg = rDeg * adjField;
     L_Rear_Drive.rotateFor(lDeg * adjField, vex::rotationUnits::deg,l, vex::velocityUnits::pct, false); //This command must be non blocking.
     L_Front_Drive.rotateFor(lDeg* adjField, vex::rotationUnits::deg,l, vex::velocityUnits::pct, false); //This command must be non blocking.
     R_Rear_Drive.rotateFor(rDeg* adjField, vex::rotationUnits::deg,r, vex::velocityUnits::pct, false); //This command must be non blocking.
